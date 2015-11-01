@@ -222,7 +222,16 @@ namespace ScriptAnalyzer.ToolBar
                     }
                     else if ( String.IsNullOrEmpty(specifiedJump.param1) || specifiedJump.param1 == "0")
                     {
-                        rTxtBox.Text += String.Format("\t[NOTE] - Exit Specified (Exit immediately){0}",Environment.NewLine);
+                        if (specifiedJump.functionId == "129")
+                        {
+                            // It's a GOTO ... this is ok
+                            rTxtBox.Text += String.Format("\t[NOTE] - Exit Specified (Exit immediately){0}", Environment.NewLine);
+                        }
+                        else
+                        {
+                            rTxtBox.Text += String.Format("\t[FAIL] - Exit Specified. See note 2 on suggestions tab.{0}", Environment.NewLine);
+                        }
+                        
                     }
                     else if (isGotoSkip == true && linesToSkip != 0)
                     {
@@ -270,20 +279,16 @@ namespace ScriptAnalyzer.ToolBar
             finally
             {
 
-                txtBoxResults.Text += String.Format("{0}----------------------------------------------------------------------------------------------------------------------------------------------------{0}", Environment.NewLine);
-                txtBoxResults.Text += String.Format("Identifying unused script note labels ( :FileExists ) ....\t Number of steps found:  {0}", numDetached);
-                txtBoxResults.Text += String.Format("{0}----------------------------------------------------------------------------------------------------------------------------------------------------{0}{0}", Environment.NewLine);
+               
             }
             
              // prevent null ref exception
-            if (numDetached < 1)
+            if(numDetached > 0)
             {
-                txtBoxResults.Text += "No unused script labels detected!";
-                
-            }
-            else
-            {
-                
+                txtBoxResults.Text += String.Format("{0}----------------------------------------------------------------------------------------------------------------------------------------------------{0}", Environment.NewLine);
+                txtBoxResults.Text += String.Format("Identifying unused script note labels ( example = :FileExists ) ....\t Number of steps found:  {0}", numDetached);
+                txtBoxResults.Text += String.Format("{0}----------------------------------------------------------------------------------------------------------------------------------------------------{0}{0}", Environment.NewLine);
+
                 foreach (var lonelyLabel in detachedLabels)
                 {
                     // get line number

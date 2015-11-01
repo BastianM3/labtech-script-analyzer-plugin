@@ -77,13 +77,11 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\..\Users\Beastian\Desktop\AnalysisForm.cs">
+    <Compile Include="AnalysisForm.cs">
       <SubType>Form</SubType>
-      <Link>AnalysisForm.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\..\Users\Beastian\Desktop\AnalysisForm.Designer.cs">
+    <Compile Include="AnalysisForm.designer.cs">
       <DependentUpon>AnalysisForm.cs</DependentUpon>
-      <Link>AnalysisForm.Designer.cs</Link>
     </Compile>
     <Compile Include="AnalysisFunctions.cs" />
     <Compile Include="ExampleForm.Designer.cs">
@@ -123,10 +121,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\..\..\Users\Beastian\Desktop\AnalysisForm.resx">
+    <EmbeddedResource Include="AnalysisForm.resx">
       <DependentUpon>AnalysisForm.cs</DependentUpon>
-      <Link>AnalysisForm.resx</Link>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ExampleForm.resx">
       <DependentUpon>ExampleForm.cs</DependentUpon>
@@ -156,9 +152,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\Resources\LabTechART.png">
-      <Link>Resources\LabTechART.png</Link>
-    </Content>
     <None Include="Resources\ScriptAnalyzerIcon.bmp" />
     <Content Include="Resources\grid_points_dark_texture_hd-wallpaper-48419.jpg" />
     <Content Include="Resources\ScriptAnalyzerIcon.png" />
