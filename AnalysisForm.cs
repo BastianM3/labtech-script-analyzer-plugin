@@ -51,43 +51,20 @@ namespace ScriptAnalyzer.ToolBar
             txtBoxMissingCof.Text = "0";
             _numberOfMissingLabels = 0;
             _currentScriptRecord = curRow.First();
-            PopulateSuggestionsBox(richTextBox1);
             PopulateGotoFuncs();
             ExtractScriptData(_currentScriptRecord);
             PerformQaOperations();
 
-        }
+            richTextBox1.Rtf = @"{\rtf1\ansi \b
+The purpose of this plugin is to allow for faster QA'ing of scripts and to point out problematic logic when possible. \line\line
+I hope that this plugin helps make LabTech scripting easier for you, and will reduce the time required to develop/test your LabTech scripts. I have had scripts fail many times due to typos in script note labels or labels that needed to be renamed.
 
-        public void PopulateSuggestionsBox(RichTextBox rtb)
-        {
-
-            rtb.Rtf = @"{\rtf1\ansi \b Note 1: \b0 We must make sure that the script label specified in the 'label to jump to' parameter of a step leveraging an IF function exists. 
-If the label specified doesn't exist, or the value is 0 or blank, the script will exit on the spot. This is undesirable since each script should ideally exit gracefully with a preceding script log message indicating why it failed.
-\line\line\b
-Example scenario: \b0
-\line\line
-line  3   IF @Ticket#@ Exists goto :TicketExists\line
-line  9          :TicketExist      <----- Typos happen!\line
-\line
-Since this label doesn't exist, the script will exit immediately on line 3\line
-/line
-
-\b Note 2: \b0 
-\line\line
-When specifying a numerical value in the 'label to jump to or \bsteps to skip\b0' parameter, this can lead to issues down the road. 
-\line\line\b
-Example scenario:\b0 Email step added between Script Log and Script Exit with Error causing unintended exiting of script
-\line
-line 35    :BuildInstaller\line
-line 36        Shell as Admin Command - Builds MST file for Acronis\line
-line 37     IF FILE EXISTS %windir%\ltsvc\acronis\AcronisAgentWindows.MST   Jump to line 40    (intended to go to :EndbuildInstaller)\line
-line 38        LOG:  Failed to create transformation file (acronisAgentWindows.mst). Script exiting!\line
-line 39        Send Email to me@myMSP.com  (Install failed!) \b< ---- After adding this line, JUMP goes to EXIT instead of continuing\b0 \line
-line 40      \b Script Exit with Error \b0\line
-line 41     :EndBuildInstaller\line
-
+Please see the ""View Suggested Practices"" button's popup window for information on the checks performed.
 }";
+
         }
+
+
 
         public void ExtractScriptData(mainForm.scriptRow thisScriptData)
         {
@@ -1679,6 +1656,12 @@ line 41     :EndBuildInstaller\line
                     
 
          }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            viewSuggestions vwSuggestions = new viewSuggestions();
+            vwSuggestions.Show();
+        }
        }
 }
 

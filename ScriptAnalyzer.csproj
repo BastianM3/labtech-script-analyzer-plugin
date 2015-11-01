@@ -119,6 +119,12 @@
     <Compile Include="viewRawScriptXML.Designer.cs">
       <DependentUpon>viewRawScriptXML.cs</DependentUpon>
     </Compile>
+    <Compile Include="viewSuggestions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="viewSuggestions.Designer.cs">
+      <DependentUpon>viewSuggestions.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AnalysisForm.resx">
@@ -137,6 +143,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="viewRawScriptXML.resx">
       <DependentUpon>viewRawScriptXML.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="viewSuggestions.resx">
+      <DependentUpon>viewSuggestions.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
