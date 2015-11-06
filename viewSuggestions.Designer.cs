@@ -41,7 +41,7 @@
             this.richTextBoxSuggestions.Location = new System.Drawing.Point(0, 0);
             this.richTextBoxSuggestions.Name = "richTextBoxSuggestions";
             this.richTextBoxSuggestions.ReadOnly = true;
-            this.richTextBoxSuggestions.Size = new System.Drawing.Size(691, 552);
+            this.richTextBoxSuggestions.Size = new System.Drawing.Size(750, 657);
             this.richTextBoxSuggestions.TabIndex = 0;
             this.richTextBoxSuggestions.Text = "";
             // 
@@ -50,7 +50,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(691, 552);
+            this.ClientSize = new System.Drawing.Size(750, 657);
             this.Controls.Add(this.richTextBoxSuggestions);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "viewSuggestions";

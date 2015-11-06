@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
+using System.Net.Mime;
 using System.Text;
 using System.Windows.Forms;
 using LabTech.Interfaces;
@@ -25,6 +24,7 @@ namespace ScriptAnalyzer.ToolBar
 
             return data;
         };
+       
 
         public static List<ScriptNoteLblFound> AnalyzeScriptNotes(List<AnalysisForm.ScriptStepRec> scriptnoteRecs,
             RichTextBox rTxtBox)
@@ -96,10 +96,11 @@ namespace ScriptAnalyzer.ToolBar
 "================================================================================================{0}" +
 "={0}"+
 "=  Beginning Analysis of IFs/Gotos - Verifying that the script label in every IF/Goto function's \"script note\" parameter exists{0}"+
-"=     i.e.)  line 3   IF @Ticket#@ Exists goto :TicketExists{0}"+
-"=             line  9          :TicketExist      <----- Typos happen!{0}"+
-"=                                     Since this label doesn't exist, the script will exit immediately on line 3{0}"+
-"={0}"+
+"={0} \t\t See notes 1 & 2 - Click the \"View Suggested Practices\" button for more info {0}" +
+//"=     i.e.)  line 3   IF @Ticket#@ Exists goto :TicketExists{0}"+
+//"=             line  9          :TicketExist      <----- Typos happen!{0}"+
+//"=                                     Since this label doesn't exist, the script will exit immediately on line 3{0}"+
+//"={0}"+
 "================================================================================================",Environment.NewLine);
 
             if (allScriptSteps == null)
@@ -124,28 +125,36 @@ namespace ScriptAnalyzer.ToolBar
                     case "Param1":
                     {
                         currentItems =
-                            allScriptSteps.Where(x => Int32.Parse(x.functionId) == funcId && Converter(x.action) != 1)
+                            allScriptSteps.Where(o => o != null)
+                                            .Where(o=>o.osLimit != "-2147483648")
+                                            .Where(x => Int32.Parse(x.functionId) == funcId && Converter(x.action) != 1)
                                              .Select(z => new AnalysisForm.ScriptStepRec { param1 = z.param1, sort = z.sort  }).ToList();
                         break;
                     }
                     case "Param2":
                     {
                         currentItems =
-                           allScriptSteps.Where(x => Int32.Parse(x.functionId) == funcId && Converter(x.action) != 1)
+                           allScriptSteps.Where(o => o != null)
+                                            .Where(o => o.osLimit != "-2147483648")
+                                            .Where(x => Int32.Parse(x.functionId) == funcId && Converter(x.action) != 1)
                                             .Select(z => new AnalysisForm.ScriptStepRec { param1 = z.param2, sort = z.sort  }).ToList();
                         break;
                     }
                     case "Param3":
                     {
                         currentItems =
-                                  allScriptSteps.Where(x => Int32.Parse(x.functionId) == funcId && Converter(x.action) != 1)
-                                                   .Select(z => new AnalysisForm.ScriptStepRec { param1 = z.param3, sort = z.sort }).ToList();
+                                  allScriptSteps.Where(o => o != null)
+                                                .Where(o => o.osLimit != "-2147483648")
+                                                .Where(x => Int32.Parse(x.functionId) == funcId && Converter(x.action) != 1)
+                                                .Select(z => new AnalysisForm.ScriptStepRec { param1 = z.param3, sort = z.sort }).ToList();
                         break;
                     }
                     case "Param4":
                     {
                         currentItems =
-                           allScriptSteps.Where(x => Int32.Parse(x.functionId) == funcId && Converter(x.action) != 1)
+                           allScriptSteps.Where(o => o != null)
+                                            .Where(o => o.osLimit != "-2147483648")
+                                            .Where(x => Int32.Parse(x.functionId) == funcId && Converter(x.action) != 1)
                                             .Select(z => new AnalysisForm.ScriptStepRec { param1 = z.param4, sort = z.sort}).ToList();
                         break;
                     }
@@ -167,6 +176,8 @@ namespace ScriptAnalyzer.ToolBar
                         Environment.NewLine,
                         funcName, 
                         currentItems.Count);
+                
+                currentItems.Sort((a,x) => int.Parse(a.sort).CompareTo(int.Parse(x.sort)));
 
                 foreach (var specifiedJump in currentItems)
                 {
@@ -225,13 +236,12 @@ namespace ScriptAnalyzer.ToolBar
                         if (specifiedJump.functionId == "129")
                         {
                             // It's a GOTO ... this is ok
-                            rTxtBox.Text += String.Format("\t[NOTE] - Exit Specified (Exit immediately){0}", Environment.NewLine);
+                            rTxtBox.Text += String.Format("\t[NOTE] - Exit Specified (Exits immediately){0}", Environment.NewLine);
                         }
                         else
                         {
-                            rTxtBox.Text += String.Format("\t[FAIL] - Exit Specified. See note 2 on suggestions tab.{0}", Environment.NewLine);
+                            rTxtBox.Text += String.Format("\t[FAIL] - Exit Specified. See note 4 on suggestions tab.{0}", Environment.NewLine);
                         }
-                        
                     }
                     else if (isGotoSkip == true && linesToSkip != 0)
                     {
@@ -246,6 +256,7 @@ namespace ScriptAnalyzer.ToolBar
                 }
             }
 
+            rTxtBox.Text += Environment.NewLine;
         }
 
         public static int IdentifyUnusedLabels(List<ScriptNoteLblFound> fullLabelList, RichTextBox txtBoxResults)
@@ -307,7 +318,7 @@ namespace ScriptAnalyzer.ToolBar
         }
       
 
-        public static int identifyNonCof(List<AnalysisForm.ScriptStepRec> allScriptSteps, RichTextBox rTxtBox)
+        public static int IdentifyNonCof(List<AnalysisForm.ScriptStepRec> allScriptSteps, RichTextBox rTxtBox)
         {
             int linesMissingCof = 0;
             bool headerPosted = false;
@@ -316,13 +327,13 @@ namespace ScriptAnalyzer.ToolBar
                 "{0}{0}================================================================================================{0}" +
                 "= {0}" +
                 "= Beginning Analysis of Functions - Verifying that every script function that can fail has the \"Continue on Failure\" box checked{0}" +
-                "={0}" +
-                "=     i.e.)  line 7   File Download (URL){0}" +
-                "=                     Param 1 - Remote URL  {0}" +
-                "=                     Param 2 - Destination Path  {0}" +
-                "=                 If Local System doesn't have write access to the drive location for example, this command will fail.{0}" +
-                "=                 If the command fails and the \"continue on failure\" checkbox is unchecked, the script will exit immediately on line 7.{0}" +
-                "={0}" +
+                "={0} \t \t See note 3 - Click the \"View Suggested Practices\" button for more info {0}" +
+             //   "=     i.e.)  line 7   File Download (URL){0}" +
+              //  "=                     Param 1 - Remote URL  {0}" +
+              //  "=                     Param 2 - Destination Path  {0}" +
+              //  "=                 If Local System doesn't have write access to the drive location for example, this command will fail.{0}" +
+              //  "=                 If the command fails and the \"continue on failure\" checkbox is unchecked, the script will exit immediately on line 7.{0}" +
+               // "={0}" +
                 "================================================================================================{0}",
                 Environment.NewLine);
 
@@ -335,6 +346,7 @@ namespace ScriptAnalyzer.ToolBar
 
            var linesToCheck = allScriptSteps.Where(x => x != null)
                 .Where(x => (x.osLimit != "-2147483648" && x.stepContinue != "1" && x.functionId != "1"))
+                .OrderBy(x => x.sort)
                 .ToList();
 
             foreach (var x in linesToCheck)
@@ -359,7 +371,7 @@ namespace ScriptAnalyzer.ToolBar
             {         
                 if (linesMissingCof == 0)
                 {
-                    rTxtBox.Text += "No problems detected!";
+                    rTxtBox.Text += "No problems detected!" + Environment.NewLine;
                     return linesMissingCof;
                 }
 
@@ -382,7 +394,7 @@ namespace ScriptAnalyzer.ToolBar
                 var stepsOfCurrentFunction = new List<AnalysisForm.ScriptStepRec>();
 
                 stepsOfCurrentFunction = allScriptSteps.Where(x=> x!= null)
-                                            .Where(x => int.Parse(x.functionId) == funcId && x.osLimit != "-2147483648" && x.stepContinue != "1")
+                                            .Where(x => int.Parse(x.functionId) == funcId && x.osLimit != "-2147483648" && x.stepContinue != "1").OrderBy(x=>x.sort)
                                              .Select(z => new AnalysisForm.ScriptStepRec { param1 = z.param1, sort = z.sort, stepContinue  = z.stepContinue}).ToList();
 
               
@@ -442,6 +454,144 @@ namespace ScriptAnalyzer.ToolBar
 
 //rtb.Text += string.Format("[Line: {0}] - {1}\t{2}{3}", lineNum, paramName, comment,Environment.NewLine);
         }
+
+        public class txtBoxMsgForSorting
+        {
+            public int lineNum { get; set; }
+            public string result { get; set; }
+            public string firstPortion { get; set; }
+        }
+        public static void FindMissingResends(List<AnalysisForm.ScriptStepRec> allScriptSteps, RichTextBox rTxtBox)
+        {
+            List<txtBoxMsgForSorting> outputLineObject = new List<txtBoxMsgForSorting>();
+            rTxtBox.Text += string.Format(
+"================================================================================================{0}" +
+"={0}" +
+"=  Beginning Analysis of IFs that use cached data - Verifying that a resend script step is found prior to using an IF-based function{0}" +
+"={0} \t\t See note 5 - Click the \"View Suggested Practices\" button for more info {0}" +
+"================================================================================================{0}{0}", Environment.NewLine);
+
+            if (!allScriptSteps.Any())
+            {
+                rTxtBox.Text += "No script steps passed in for verification. Is this script blank?";
+                return;
+            }
+
+            var linesToCheck = allScriptSteps
+                    .Where(x => x != null)
+                    .Where(x => (x.osLimit != "-2147483648" && x.functionId != "1"))
+                     .OrderBy(x => x.sort)
+                    .ToList();
+
+            if (!linesToCheck.Any())
+            {
+                rTxtBox.Text += "No problems detected!" + Environment.NewLine;
+                return;
+            }
+            else
+            {
+                //rTxtBox.Text += "Found sometthing ....";
+
+            }
+
+            // Just a place holder
+            foreach (var functionToSeek in AnalysisForm._FuncsNeedingResend.ToList())
+            {
+             
+                
+                var seekFunctionId = functionToSeek.FunctionID;
+                var seekFunctionName = functionToSeek.FunctionName;
+                var resendFuncName = functionToSeek.ResendFuncName;
+                var resendFuncId= functionToSeek.ResendFunctionID;
+                int lineNumOfIf = 0;
+                int cursorSortLastIf = 0;
+
+                // can I find any rows in list that match this function?
+                var listMatchesSeeked =
+                    allScriptSteps
+                    .Where(x => x != null)
+                    .Where(x => x.osLimit != "-2147483648" && x.functionId == seekFunctionId.ToString())
+                    .OrderBy(x=>x.sort)
+                    .ToList();
+
+                if (!listMatchesSeeked.Any())
+                {
+                    // didn't find anything
+                    continue;
+                }
+                else
+                {
+                    
+
+                    foreach (var lineForThisFunction in listMatchesSeeked.OrderBy(x => int.Parse(x.sort) ))
+                    {
+                        lineNumOfIf = int.Parse(lineForThisFunction.sort) + 1;
+                        
+                        // get count of rows where line # > current line. 
+                        var foundResends = allScriptSteps
+                            .Where(x=>x!=null)
+                            .Where(x => x.osLimit != "-2147483648" 
+                                    && x.functionId == resendFuncId.ToString()
+                                    && int.Parse(x.sort)+1 < lineNumOfIf 
+                                    && int.Parse(x.sort)+1 > cursorSortLastIf)
+                                    .OrderBy(x=> x.sort )
+                            .ToList();
+
+                        
+                        var lineStart = String.Format("[Line {1}] \t Cached data leveraging function \"{0}\":", seekFunctionName, lineNumOfIf).PadRight(70, '.');
+                        //rTxtBox.Text += logmsg;
+
+                        var logmsg = "";
+
+                        if (foundResends.Any())
+                        {
+                            // found one, yay!
+                            int resendMatchLineNum = int.Parse(foundResends.OrderBy(x => int.Parse(x.sort) + 1).LastOrDefault().sort) + 1;
+
+                            logmsg = String.Format("\t[SUCCESS] Required \"{0}\" found on line {2} {1}", resendFuncName, Environment.NewLine, resendMatchLineNum);
+
+                        }
+                        else
+                        {
+                            // ut-oh ... didn't find a matching resend event!
+                           logmsg = String.Format("\t[FAIL] - \"{1}\" required before this step to pull fresh data!{0}", Environment.NewLine, resendFuncName);
+                        }
+
+                        outputLineObject.Add(new txtBoxMsgForSorting { lineNum = lineNumOfIf, firstPortion = lineStart, result = logmsg });
+                        cursorSortLastIf = lineNumOfIf;
+                    }
+
+
+                   // var listFoundResend = allScriptSteps.Where((x=> x !=null))
+                     //   .Where(x=> x.functionId == )
+                    // If so, is there at least one matching resend?
+
+
+                 
+
+                }
+
+
+
+            }
+
+
+            outputLineObject = outputLineObject.Where(x => x != null).OrderBy(o => o.lineNum).ToList();
+
+            foreach (var lineToWriteToBox in outputLineObject)
+            {
+                rTxtBox.Text += lineToWriteToBox.firstPortion + lineToWriteToBox.result;
+            }
+
+
+
+
+
+        }
+
+
+
+
 
         public class ScriptNoteLblFound
         {

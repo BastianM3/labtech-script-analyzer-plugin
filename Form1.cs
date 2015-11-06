@@ -157,7 +157,7 @@ namespace ScriptAnalyzer.ToolBar
             MenuItem mnuAnalyzeItem = new MenuItem("Analyze (QA)");
             mnuAnalyzeItem.Click += mnuAnalyzeItem_Click;
 
-            MenuItem mnuViewItem = new MenuItem("View");
+            MenuItem mnuViewItem = new MenuItem("View (coming soon)");
                mnuViewItem.Click += mnuViewItem_Click;
 
             menu.MenuItems.AddRange(
@@ -169,7 +169,7 @@ namespace ScriptAnalyzer.ToolBar
 
 void mnuViewItem_Click(object sender, EventArgs e)
 {
- 	throw new NotImplementedException();
+ 	//throw new NotImplementedException();
 }
 
 void mnuAnalyzeItem_Click(object sender, EventArgs e)
@@ -190,8 +190,16 @@ void mnuAnalyzeItem_Click(object sender, EventArgs e)
 
             if (e.Button == MouseButtons.Right)
             {
-                this.dataGridView1.CurrentCell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                show_OptionsContext(sender, e);
+                try
+                {
+                    this.dataGridView1.CurrentCell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                    show_OptionsContext(sender, e);
+                }
+                catch (Exception)
+                {
+                    
+                }
+                
 
             }
 

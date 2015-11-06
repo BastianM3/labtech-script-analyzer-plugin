@@ -24,6 +24,7 @@ namespace ScriptAnalyzer.ToolBar
 
         public static List<LabTechFunctions> _GotoFunctionList = new List<LabTechFunctions>();
         public static List<LabTechFunctions> _FuncsRequiringCOF = new List<LabTechFunctions>();
+        public static List<FuncNeedingCacheRefresh> _FuncsNeedingResend = new List<FuncNeedingCacheRefresh>();
 
         // stats that will be updated as the script _CurrentScriptsSteps are processed
         private static int _numberOfMissingLabels;
@@ -56,10 +57,13 @@ namespace ScriptAnalyzer.ToolBar
             PerformQaOperations();
 
             richTextBox1.Rtf = @"{\rtf1\ansi \b
-The purpose of this plugin is to allow for faster QA'ing of scripts and to point out problematic logic when possible. \line\line
-I hope that this plugin helps make LabTech scripting easier for you, and will reduce the time required to develop/test your LabTech scripts. I have had scripts fail many times due to typos in script note labels or labels that needed to be renamed.
+I hope that this plugin makes LabTech scripting easier for you, and will reduce the time required to develop/test your LabTech scripts. \line\line
 
-Please see the ""View Suggested Practices"" button's popup window for information on the checks performed.
+I have created this plugin to allow for faster and more accurate QA'ing of scripts. \line\line
+
+Too many times have I seen my scripts and those of others fail due to typos in script note labels or labels that were pasted and needed to be renamed.  Hopefully this will help save you some time as well! \line\line
+
+Happy LabTech Scripting!
 }";
 
         }
@@ -261,7 +265,7 @@ Please see the ""View Suggested Practices"" button's popup window for informatio
 
             try
             {
-                var linesMissingCOF = AnalysisFunctions.identifyNonCof(scriptdata, rTxtBoxResults);
+                var linesMissingCOF = AnalysisFunctions.IdentifyNonCof(scriptdata, rTxtBoxResults);
                 txtBoxMissingCof.Text = linesMissingCOF.ToString();
             }
             catch (Exception exc)
@@ -270,6 +274,21 @@ Please see the ""View Suggested Practices"" button's popup window for informatio
                 rTxtBoxResults.Text += exc.StackTrace;
                 throw;
             }
+
+            try
+            {
+                AnalysisFunctions.FindMissingResends(scriptdata, rTxtBoxResults);
+            }
+            catch (Exception ex)
+            {
+                rTxtBoxResults.Text +=
+                    "An error was encountered while trying to analyze IF functions for matching RESEND script steps..." +
+                    Environment.NewLine;
+                rTxtBoxResults.Text += ex.Message + Environment.NewLine;
+                rTxtBoxResults.Text += ex.StackTrace + Environment.NewLine;
+
+            }
+
         }
 
         private static void PopulateGotoFuncs()
@@ -425,12 +444,14 @@ Please see the ""View Suggested Practices"" button's popup window for informatio
                 ParamIdForLabel = "Param3",
                 FunctionName = "IF Group Member"
             });
-            _GotoFunctionList.Add(new LabTechFunctions
+            _GotoFunctionList.Add(new LabTechFunctions 
             {
                 FunctionId = 255,
                 ParamIdForLabel = "Param3",
                 FunctionName = "IF Group Member"
             });
+
+
 
             #region FunctionsRequiringCOF
 
@@ -1544,6 +1565,102 @@ Please see the ""View Suggested Practices"" button's popup window for informatio
             });
 
             #endregion
+
+            #region Functions Requiring Cache Refresh
+
+           /* _FuncsNeedingResend.Add(
+                new FuncNeedingCacheRefresh
+                {
+                    FunctionId =,
+                    FunctionName = '',
+                    ResendFunctionID = 45,
+                    ResendFuncName = 'Resend Error Logs'
+                };
+            
+            _FuncsNeedingResend.Add(new FuncNeedingCacheRefresh
+            {
+                FunctionId = ,
+                FunctionName = '' ResendFunctionID = 49,
+                ResendFuncName = 'Resend EventLogs'
+            };
+            * */
+          /*  _FuncsNeedingResend.Add(new FuncNeedingCacheRefresh
+            {
+                FunctionId = ,
+                FunctionName = '' ResendFunctionID = 50,
+                ResendFuncName = 'Resend Hardware'
+            };*/
+
+            _FuncsNeedingResend.Clear();
+            _FuncsNeedingResend.Add(new FuncNeedingCacheRefresh
+            {
+                FunctionID = 110,
+                FunctionName = "IF Process Exists",
+                ResendFunctionID = 51,
+                ResendFuncName = "Resend Process List"
+            });
+
+            _FuncsNeedingResend.Add(new FuncNeedingCacheRefresh
+            {
+                FunctionID = 122,
+                FunctionName = "IF AutoStartup Check",
+                ResendFunctionID = 52,
+                ResendFuncName = "Resend Autostartup List"
+            });
+            _FuncsNeedingResend.Add(new FuncNeedingCacheRefresh
+            {
+                FunctionID = 119,
+                FunctionName = "IF Drive Status",
+                ResendFunctionID = 53,
+                ResendFuncName = "Resend Drive Info"
+            });
+            _FuncsNeedingResend.Add(new FuncNeedingCacheRefresh
+            {
+                FunctionID =120,
+                FunctionName = "IF Software Installed", ResendFunctionID = 54,
+                ResendFuncName = "Resend Software"
+            });
+           /* _FuncsNeedingResend.Add(new FuncNeedingCacheRefresh
+            {
+                FunctionID = ,
+                FunctionName = "", ResendFunctionID = 55,
+                ResendFuncName = "Resend Config"
+            });*/
+            _FuncsNeedingResend.Add(new FuncNeedingCacheRefresh
+            {
+                FunctionID = 113,
+                FunctionName = "IF Service is Running",
+                ResendFunctionID = 56,
+                ResendFuncName = "Resend Service List"
+            });
+           /* _FuncsNeedingResend.Add(new FuncNeedingCacheRefresh
+            {
+                FunctionID =,
+                FunctionName = "", ResendFunctionID = 57,
+                ResendFuncName = "Resend Printers"
+            });*/
+           /* _FuncsNeedingResend.Add(new FuncNeedingCacheRefresh
+            {
+                FunctionID =,
+                FunctionName = "", ResendFunctionID = 148,
+                ResendFuncName = "Resend System Information"
+            });
+            * */
+/*            _FuncsNeedingResend.Add(new FuncNeedingCacheRefresh
+            {
+                FunctionID =,
+                FunctionName = "", ResendFunctionID = 149,
+                ResendFuncName = "Resend Network information"
+            });*/
+            _FuncsNeedingResend.Add(new FuncNeedingCacheRefresh
+            {
+                FunctionID = 121,
+                FunctionName = "IF Patch Installed", ResendFunctionID = 152,
+                ResendFuncName = "Resend Patch information"
+            });
+       
+
+#endregion
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -1579,6 +1696,14 @@ Please see the ""View Suggested Practices"" button's popup window for informatio
             public string FunctionName { get; set; }
         }
 
+        public class FuncNeedingCacheRefresh
+        {
+            public int FunctionID { get; set; }
+            public string FunctionName { get; set; }
+            public string ResendFuncName { get; set; }
+            public int ResendFunctionID { get; set; }
+        }
+        
         public class ScriptStepRec
         {
             public string action;

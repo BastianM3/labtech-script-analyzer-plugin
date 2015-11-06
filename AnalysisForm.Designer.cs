@@ -55,8 +55,6 @@
             this.btnBuildReport = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.tc_ScriptResults.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -399,8 +397,6 @@
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.richTextBox1);
-            this.tabPage2.Controls.Add(this.label9);
-            this.tabPage2.Controls.Add(this.label8);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -411,30 +407,16 @@
             // 
             // richTextBox1
             // 
+            this.richTextBox1.BackColor = System.Drawing.Color.Black;
             this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBox1.Location = new System.Drawing.Point(8, 65);
+            this.richTextBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.richTextBox1.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.richTextBox1.Location = new System.Drawing.Point(9, 9);
+            this.richTextBox1.Margin = new System.Windows.Forms.Padding(6, 13, 6, 6);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(365, 121);
+            this.richTextBox1.Size = new System.Drawing.Size(765, 178);
             this.richTextBox1.TabIndex = 2;
-            this.richTextBox1.Text = resources.GetString("richTextBox1.Text");
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(8, 15);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(60, 13);
-            this.label9.TabIndex = 1;
-            this.label9.Text = "Version 1.2";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(8, 40);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(152, 13);
-            this.label8.TabIndex = 0;
-            this.label8.Text = "Developed by: Marcus Bastian";
+            this.richTextBox1.Text = "";
             // 
             // AnalysisForm
             // 
@@ -454,7 +436,6 @@
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -484,8 +465,6 @@
         private System.Windows.Forms.TextBox txtBoxLastDate;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.RichTextBox richTextBox1;
