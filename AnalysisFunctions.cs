@@ -324,7 +324,7 @@ namespace ScriptAnalyzer.ToolBar
             bool headerPosted = false;
 
             rTxtBox.Text += string.Format(
-                "{0}{0}================================================================================================{0}" +
+                "{0}================================================================================================{0}" +
                 "= {0}" +
                 "= Beginning Analysis of Functions - Verifying that every script function that can fail has the \"Continue on Failure\" box checked{0}" +
                 "={0} \t \t See note 3 - Click the \"View Suggested Practices\" button for more info {0}" +
@@ -465,10 +465,10 @@ namespace ScriptAnalyzer.ToolBar
         {
             List<txtBoxMsgForSorting> outputLineObject = new List<txtBoxMsgForSorting>();
             rTxtBox.Text += string.Format(
-"================================================================================================{0}" +
+"{0}================================================================================================{0}" +
 "={0}" +
 "=  Beginning Analysis of IFs that use cached data - Verifying that a resend script step is found prior to using an IF-based function{0}" +
-"={0} \t\t See note 5 - Click the \"View Suggested Practices\" button for more info {0}" +
+"={0} \t\t See note 5 - Click the \"View Suggested Practices\" button for details {0}" +
 "================================================================================================{0}{0}", Environment.NewLine);
 
             if (!allScriptSteps.Any())
@@ -546,7 +546,7 @@ namespace ScriptAnalyzer.ToolBar
                         if (foundResends.Any())
                         {
                             // found one, yay!
-                            int resendMatchLineNum = int.Parse(foundResends.OrderBy(x => int.Parse(x.sort) + 1).LastOrDefault().sort) + 1;
+                          int resendMatchLineNum = int.Parse(foundResends.OrderBy(x => int.Parse(x.sort) + 1).LastOrDefault().sort) + 1;
 
                             logmsg = String.Format("\t[SUCCESS] Required \"{0}\" found on line {2} {1}", resendFuncName, Environment.NewLine, resendMatchLineNum);
 

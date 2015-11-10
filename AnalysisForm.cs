@@ -63,7 +63,11 @@ I have created this plugin to allow for faster and more accurate QA'ing of scrip
 
 Too many times have I seen my scripts and those of others fail due to typos in script note labels or labels that were pasted and needed to be renamed.  Hopefully this will help save you some time as well! \line\line
 
-Happy LabTech Scripting!
+Happy LabTech Scripting!\line\line
+
+- Marcus Bastian \line
+CW/LT DevOps 
+
 }";
 
         }
@@ -1620,12 +1624,13 @@ Happy LabTech Scripting!
                 FunctionName = "IF Software Installed", ResendFunctionID = 54,
                 ResendFuncName = "Resend Software"
             });
-           /* _FuncsNeedingResend.Add(new FuncNeedingCacheRefresh
+           _FuncsNeedingResend.Add(new FuncNeedingCacheRefresh
             {
-                FunctionID = ,
-                FunctionName = "", ResendFunctionID = 55,
-                ResendFuncName = "Resend Config"
-            });*/
+                FunctionID = 118,
+                FunctionName = "IF Smart Attributes", 
+            ResendFunctionID = 53,
+                ResendFuncName = "Resend Drive Info"
+            });
             _FuncsNeedingResend.Add(new FuncNeedingCacheRefresh
             {
                 FunctionID = 113,
