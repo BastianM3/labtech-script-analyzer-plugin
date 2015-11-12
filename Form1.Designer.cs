@@ -58,7 +58,7 @@ namespace ScriptAnalyzer.ToolBar
             this.lblNumScripts.Size = new System.Drawing.Size(142, 13);
             this.lblNumScripts.TabIndex = 2;
             this.lblNumScripts.Text = "Number of Scripts in System:";
-            this.lblNumScripts.Click += new System.EventHandler(this.label1_Click);
+            //this.lblNumScripts.Click += new System.EventHandler(this.label1_Click);
             // 
             // richTextBox1
             // 
@@ -88,6 +88,8 @@ namespace ScriptAnalyzer.ToolBar
             this.dataGridView1.Size = new System.Drawing.Size(1092, 658);
             this.dataGridView1.TabIndex = 6;
             this.dataGridView1.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_MouseDown);
+           // this.dataGridView1.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(dataGridView1_ColumnHeaderMouseClick);
+
             // 
             // panel1
             // 

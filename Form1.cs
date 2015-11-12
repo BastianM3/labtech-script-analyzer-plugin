@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.Collections.Generic;
+using System.ComponentModel;
 using LabTech.Interfaces;
 using LabTechCommon;
 
@@ -13,8 +16,8 @@ namespace ScriptAnalyzer.ToolBar
     public partial class mainForm : Form
     {
         private static IControlCenter _Host;
-        public List<scriptRow> _scriptList = new List<scriptRow>();
-
+        public SortableBindingList<scriptRow> _scriptList = new SortableBindingList<scriptRow>();
+        
         public mainForm(IControlCenter host)
         {
             InitializeComponent();
@@ -69,7 +72,7 @@ namespace ScriptAnalyzer.ToolBar
 
             // populate checklist
             //  var dictScriptData = new List<scriptRow>();
-
+            Library.Forms.SortableBindingList<scriptRow> rows = new Library.Forms.SortableBindingList<scriptRow>();
             foreach (DataRow row in scriptDs.Tables[0].Rows)
             {
                 int curScriptId = (int)row["ScriptID"];
@@ -94,43 +97,72 @@ namespace ScriptAnalyzer.ToolBar
                     lastDate = curLastUpdated
                 });
 
+                rows.Add(new scriptRow
+                {
+                    scriptId = curScriptId,
+                    folderName = curFolderName,
+                    scriptName = curScriptName,
+                    scriptData = decompScript,
+                    lastUser = curLastUser,
+                    byteScriptData = curScriptData,
+                    lastDate = curLastUpdated
+                });
             }
+            
+            dataGridView1.DataSource = rows;
+            AdjustDataColumns();
 
-            dataGridView1.DataSource = _scriptList.Select(o => new { scriptId = o.scriptId, scriptfolder = o.folderName, scriptName = o.scriptName, lastuser = o.lastUser, lastUpdated=o.lastDate }).ToList();
 
+        }
+
+        private void AdjustDataColumns()
+        {
             if (dataGridView1.ColumnCount > 0)
             {
-                dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                dataGridView1.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                dataGridView1.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                dataGridView1.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                dataGridView1.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
-                dataGridView1.Columns[0].HeaderText = "Script ID";
-                dataGridView1.Columns[1].HeaderText = "Script Folder";
-                dataGridView1.Columns[2].HeaderText = "Script Name";
-                dataGridView1.Columns[3].HeaderText = "Last User";
-                dataGridView1.Columns[4].HeaderText = "Date Last Updated";
+                try
+                {
+                    this.dataGridView1.Columns["byteScriptData"].Visible = false;
+                    this.dataGridView1.Columns["scriptData"].Visible = false;
+
+                    this.dataGridView1.Columns["scriptName"].DisplayIndex = 2;
+                    this.dataGridView1.Columns["scriptName"].HeaderText = "Script Name";
+                    this.dataGridView1.Columns["scriptId"].DisplayIndex = 0;
+                    this.dataGridView1.Columns["scriptId"].HeaderText = "Script ID";
+                    
+                    this.dataGridView1.Columns["folderName"].DisplayIndex = 1;
+                    this.dataGridView1.Columns["folderName"].HeaderText = "Script Folder";
+
+                    this.dataGridView1.Columns["lastUser"].DisplayIndex = 4;
+                    this.dataGridView1.Columns["lastUser"].HeaderText = "Last User";
+
+                    this.dataGridView1.Columns["lastDate"].DisplayIndex = 5;
+                    this.dataGridView1.Columns["lastDate"].HeaderText = "Date Last Updated";
+
+                    this.dataGridView1.AllowUserToResizeColumns = true;
+
+                    dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                    dataGridView1.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                    dataGridView1.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                    dataGridView1.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                    dataGridView1.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                    dataGridView1.Columns[6].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                    this.dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.ColumnHeader;
+                }
+                catch (Exception)
+                {
+                    
+                    throw;
+                }
+           
             }
-
         }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            
-            
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
+      
         public class LabTechFunctions
         {
             //private static readonly string SqlQuery = "SELECT ScriptID, ScriptName, ScriptData, Last_User from lt_scripts;";
 
-            public static string SqlQuery ="SELECT ScriptID, TRIM( TRAILING '\\\\' FROM CONVERT(CONCAT(IFNULL(CONCAT(f.Name ,' \\\\ '),''),IFNULL(CONCAT(s.Name ,'\\\\\\\\'),''),'' ) USING utf8)) AS `Script Folder`,c.ScriptName AS `Script Name`, ScriptData AS `ScriptData`, last_User,last_date FROM LT_scripts c LEFT JOIN scriptfolders s 	ON s.folderid=c.folderid LEFT JOIN scriptfolders f ON f.folderid=s.parentid WHERE (COALESCE(s.parentid,0)=0 OR s.name NOT LIKE '\\\\_%') ORDER BY `Script Folder` ASC;";
+            public static string SqlQuery ="SELECT ScriptID, TRIM( TRAILING '\\\\' FROM CONVERT(CONCAT(IFNULL(CONCAT(f.Name ,' \\\\ '),''),IFNULL(CONCAT(s.Name ,'\\\\\\\\'),''),'' ) USING utf8)) AS `Script Folder`,c.ScriptName AS `Script Name`, ScriptData AS `ScriptData`, last_User,last_date FROM LT_scripts c LEFT JOIN scriptfolders s 	ON s.folderid=c.folderid LEFT JOIN scriptfolders f ON f.folderid=s.parentid WHERE (COALESCE(s.parentid,0)=0 OR s.name NOT LIKE '\\\\_%') ORDER BY `ScriptID` desc;";
             public static DataSet GetScripts()
             {
                 
@@ -221,4 +253,94 @@ void mnuAnalyzeItem_Click(object sender, EventArgs e)
         */
 
     }
+
+    public class SortableBindingList<T> : BindingList<T>
+    {
+        private bool isSortedValue;
+        ListSortDirection sortDirectionValue;
+        PropertyDescriptor sortPropertyValue;
+
+        public SortableBindingList()
+        {
+        }
+
+        public SortableBindingList(IList<T> list)
+        {
+            foreach (object o in list)
+            {
+                this.Add((T)o);
+            }
+        }
+
+        protected override void ApplySortCore(PropertyDescriptor prop,
+            ListSortDirection direction)
+        {
+            Type interfaceType = prop.PropertyType.GetInterface("IComparable");
+
+            if (interfaceType == null && prop.PropertyType.IsValueType)
+            {
+                Type underlyingType = Nullable.GetUnderlyingType(prop.PropertyType);
+
+                if (underlyingType != null)
+                {
+                    interfaceType = underlyingType.GetInterface("IComparable");
+                }
+            }
+
+            if (interfaceType != null)
+            {
+                sortPropertyValue = prop;
+                sortDirectionValue = direction;
+
+                IEnumerable<T> query = base.Items;
+
+                if (direction == ListSortDirection.Ascending)
+                {
+                    query = query.OrderBy(i => prop.GetValue(i));
+                }
+                else
+                {
+                    query = query.OrderByDescending(i => prop.GetValue(i));
+                }
+
+                int newIndex = 0;
+                foreach (object item in query)
+                {
+                    this.Items[newIndex] = (T)item;
+                    newIndex++;
+                }
+
+                isSortedValue = true;
+                this.OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+            }
+            else
+            {
+                throw new NotSupportedException("Cannot sort by " + prop.Name +
+                    ". This" + prop.PropertyType.ToString() +
+                    " does not implement IComparable");
+            }
+        }
+
+        protected override PropertyDescriptor SortPropertyCore
+        {
+            get { return sortPropertyValue; }
+        }
+
+        protected override ListSortDirection SortDirectionCore
+        {
+            get { return sortDirectionValue; }
+        }
+
+        protected override bool SupportsSortingCore
+        {
+            get { return true; }
+        }
+
+        protected override bool IsSortedCore
+        {
+            get { return isSortedValue; }
+        }
+    }
+
+
 }

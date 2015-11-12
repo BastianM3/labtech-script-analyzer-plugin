@@ -59,14 +59,12 @@ namespace ScriptAnalyzer.ToolBar
             richTextBox1.Rtf = @"{\rtf1\ansi \b
 I hope that this plugin makes LabTech scripting easier for you, and will reduce the time required to develop/test your LabTech scripts. \line\line
 
-I have created this plugin to allow for faster and more accurate QA'ing of scripts. \line\line
-
-Too many times have I seen my scripts and those of others fail due to typos in script note labels or labels that were pasted and needed to be renamed.  Hopefully this will help save you some time as well! \line\line
-
+Too many times have I seen my scripts and those of others fail due to typos in script note labels or labels that were pasted and needed to be renamed. 
+\line
 Happy LabTech Scripting!\line\line
 
-- Marcus Bastian \line
-CW/LT DevOps 
+- Marcus \line
+
 
 }";
 
@@ -460,12 +458,6 @@ CW/LT DevOps
             #region FunctionsRequiringCOF
 
             _FuncsRequiringCOF.Clear();
-            _FuncsRequiringCOF.Add(new LabTechFunctions
-            {
-                FunctionId = 83,
-                ParamIdForLabel = "Add User Accounts",
-                FunctionName = "Add User Accounts"
-            });
             _FuncsRequiringCOF.Add(new LabTechFunctions
             {
                 FunctionId = 214,
@@ -1422,12 +1414,7 @@ CW/LT DevOps
                 ParamIdForLabel = "LabTech Plugin Alert",
                 FunctionName = "LabTech Plugin Alert"
             });
-            _FuncsRequiringCOF.Add(new LabTechFunctions
-            {
-                FunctionId = 214,
-                ParamIdForLabel = "Bulk Registry Write",
-                FunctionName = "Bulk Registry Write"
-            });
+
 //_FuncsRequiringCOF.Add(new LabTechFunctions { FunctionId = 215, ParamIdForLabel = "Script Exit with Error", FunctionName = "Script Exit with Error" });
             _FuncsRequiringCOF.Add(new LabTechFunctions
             {

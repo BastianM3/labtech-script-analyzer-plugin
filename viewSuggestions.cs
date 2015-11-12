@@ -97,14 +97,17 @@ In some of my recent scripts that are heavily utilized, i'm using a bullet point
 \line \line
 As you may know, LabTech agents update the LabTech server's database with their latest process, hotfix, software and other data on intervals you define. These intervals are managed via the ""schedule"" which is applied to agent templates.
 \line\line
-When you refer to data that is updated on these intervals within your script, you should assume that the data is out-of-date and requires updating. When the LabTech scripting engine processes an ""IF Software Installed"" script step, for example, it will check to see if the agent's software list has been updated within the last 10-minutes. If not, the scripting engine will send a ""resend software"" command to the remote agent to refresh the cache for you. 
-This is fantastic, however in most situations it isn't frequent enough. With that being said, you should add a ""resend software"" script step in your script immediately prior to checking if the software is installed. 
+When you refer to data that is updated on these intervals within your script, you should assume that the data is out-of-date and requires updating. When the LabTech scripting engine processes an ""IF Software Installed"" script step, for example, it will check to see if the agent's software list has been updated within the past 10-minutes. If not, the scripting engine will send a ""resend software"" command to the remote agent to refresh the cache for you. 
+This is fantastic, however in most situations it isn't frequent enough. With that being said, I recommend that you add a ""resend software"" script step in your script immediately prior to checking if the software is installed. 
 \line\line
-Let's say that you're performing a database backup or some other operation that requires that a service be running. If the service has crashed, was stopped by someone, etc. then the operation you're attempting will fail. 
-It is due to scenarios like this that we refresh the relevant cache before using IF statements with it. The same goes for SQL queries and the underlying tables that match the cache; resend software info before querying the software table.
+Let's say that you're performing a database backup or some other operation that requires that a service be running. If the service has crashed, was stopped by someone, etc. then the operation you're attempting will fail. In the context of software installations, you may not want the script to uninstall/install software and reboot a second time. It is due to scenarios like these that we refresh the relevant cache before using IF statements with it. The same goes for SQL queries and the underlying tables that match the cache; resend software info before querying the software table.
 \line\line
 Here is a list of the IF functions that rely on cached data, along with the script function you should send before using it:\line\line
-
+\line
+\b
+Name of Function\tab  Cache Refresh Function  Tables in LabTech DB \line
+\b0
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------\line
 IF Process Exists \tab\tab - Resend Process List -\tab Stored in ""labtech.processes""\line
 IF AutoStartup Check \tab - Resend Autostartup List -\tab Stored in ""labtech.autostartup""\line
 IF Drive Status \tab\tab - Resend Drive Info -\tab Stored in ""labtech.drives"" & ""labtech.defragmentation""\line

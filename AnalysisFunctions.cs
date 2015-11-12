@@ -128,7 +128,7 @@ namespace ScriptAnalyzer.ToolBar
                             allScriptSteps.Where(o => o != null)
                                             .Where(o=>o.osLimit != "-2147483648")
                                             .Where(x => Int32.Parse(x.functionId) == funcId && Converter(x.action) != 1)
-                                             .Select(z => new AnalysisForm.ScriptStepRec { param1 = z.param1, sort = z.sort  }).ToList();
+                                             .Select(z => new AnalysisForm.ScriptStepRec { param1 = z.param1, sort = z.sort, functionId = z.functionId }).ToList();
                         break;
                     }
                     case "Param2":
@@ -137,7 +137,7 @@ namespace ScriptAnalyzer.ToolBar
                            allScriptSteps.Where(o => o != null)
                                             .Where(o => o.osLimit != "-2147483648")
                                             .Where(x => Int32.Parse(x.functionId) == funcId && Converter(x.action) != 1)
-                                            .Select(z => new AnalysisForm.ScriptStepRec { param1 = z.param2, sort = z.sort  }).ToList();
+                                            .Select(z => new AnalysisForm.ScriptStepRec { param1 = z.param2, sort = z.sort, functionId = z.functionId }).ToList();
                         break;
                     }
                     case "Param3":
@@ -146,7 +146,7 @@ namespace ScriptAnalyzer.ToolBar
                                   allScriptSteps.Where(o => o != null)
                                                 .Where(o => o.osLimit != "-2147483648")
                                                 .Where(x => Int32.Parse(x.functionId) == funcId && Converter(x.action) != 1)
-                                                .Select(z => new AnalysisForm.ScriptStepRec { param1 = z.param3, sort = z.sort }).ToList();
+                                                .Select(z => new AnalysisForm.ScriptStepRec { param1 = z.param3, sort = z.sort, functionId = z.functionId}).ToList();
                         break;
                     }
                     case "Param4":
@@ -155,7 +155,7 @@ namespace ScriptAnalyzer.ToolBar
                            allScriptSteps.Where(o => o != null)
                                             .Where(o => o.osLimit != "-2147483648")
                                             .Where(x => Int32.Parse(x.functionId) == funcId && Converter(x.action) != 1)
-                                            .Select(z => new AnalysisForm.ScriptStepRec { param1 = z.param4, sort = z.sort}).ToList();
+                                            .Select(z => new AnalysisForm.ScriptStepRec { param1 = z.param4, sort = z.sort, functionId = z.functionId }).ToList();
                         break;
                     }
                 }
@@ -195,6 +195,7 @@ namespace ScriptAnalyzer.ToolBar
                     // Best-practice - should NOT be skipping lines by #
                     int linesToSkip = -9999;
                     bool isGotoSkip = false;
+                    specifiedJump.param1 = specifiedJump.param1.TrimStart('!');
                     isGotoSkip = int.TryParse(specifiedJump.param1, out linesToSkip);
 
                     if (isLineNumInt = true)
@@ -220,7 +221,7 @@ namespace ScriptAnalyzer.ToolBar
                     if (foundMatchingLabel)
                     {
 
-                        rTxtBox.Text += String.Format("\t[SUCCESS] FOUND LABEL {0}{1}",
+                        rTxtBox.Text += String.Format("\t[SUCCESS] Found label: {0}{1}",
                             matchedObjects[0].ItemName, Environment.NewLine);
 
 
@@ -231,7 +232,7 @@ namespace ScriptAnalyzer.ToolBar
                       
 
                     }
-                    else if ( String.IsNullOrEmpty(specifiedJump.param1) || specifiedJump.param1 == "0")
+                    else if ( String.IsNullOrEmpty(specifiedJump.param1) || specifiedJump.param1 == "0" ) 
                     {
                         if (specifiedJump.functionId == "129")
                         {
@@ -240,7 +241,7 @@ namespace ScriptAnalyzer.ToolBar
                         }
                         else
                         {
-                            rTxtBox.Text += String.Format("\t[FAIL] - Exit Specified. See note 4 on suggestions tab.{0}", Environment.NewLine);
+                            rTxtBox.Text += String.Format("\t[FAIL] - Exit Specified. See note 4 on suggestions tab.{0}", Environment.NewLine,specifiedJump.functionId);
                         }
                     }
                     else if (isGotoSkip == true && linesToSkip != 0)
@@ -249,7 +250,7 @@ namespace ScriptAnalyzer.ToolBar
                     }
                     else
                     {
-                        rTxtBox.Text += String.Format("\t[FAIL]  DID NOT FIND MATCHING LABEL: {0}{1}",
+                        rTxtBox.Text += String.Format("\t[FAIL]  Did not find matching label: {0}{1}",
                             specifiedJump.param1, Environment.NewLine);
                         AnalysisForm.AddOneMissingLabel();
                     }
@@ -463,6 +464,7 @@ namespace ScriptAnalyzer.ToolBar
         }
         public static void FindMissingResends(List<AnalysisForm.ScriptStepRec> allScriptSteps, RichTextBox rTxtBox)
         {
+            bool noRecordsProcessed = true;
             List<txtBoxMsgForSorting> outputLineObject = new List<txtBoxMsgForSorting>();
             rTxtBox.Text += string.Format(
 "{0}================================================================================================{0}" +
@@ -504,6 +506,7 @@ namespace ScriptAnalyzer.ToolBar
                 var resendFuncName = functionToSeek.ResendFuncName;
                 var resendFuncId= functionToSeek.ResendFunctionID;
                 int lineNumOfIf = 0;
+                
                 int cursorSortLastIf = 0;
 
                 // can I find any rows in list that match this function?
@@ -522,11 +525,11 @@ namespace ScriptAnalyzer.ToolBar
                 else
                 {
                     
-
+                    
                     foreach (var lineForThisFunction in listMatchesSeeked.OrderBy(x => int.Parse(x.sort) ))
                     {
                         lineNumOfIf = int.Parse(lineForThisFunction.sort) + 1;
-                        
+                        noRecordsProcessed = false;
                         // get count of rows where line # > current line. 
                         var foundResends = allScriptSteps
                             .Where(x=>x!=null)
@@ -545,10 +548,10 @@ namespace ScriptAnalyzer.ToolBar
 
                         if (foundResends.Any())
                         {
-                            // found one, yay!
-                          int resendMatchLineNum = int.Parse(foundResends.OrderBy(x => int.Parse(x.sort) + 1).LastOrDefault().sort) + 1;
-
-                            logmsg = String.Format("\t[SUCCESS] Required \"{0}\" found on line {2} {1}", resendFuncName, Environment.NewLine, resendMatchLineNum);
+                             // found one, yay!
+                             int resendMatchLineNum = int.Parse(foundResends.OrderBy(x => int.Parse(x.sort) + 1).LastOrDefault().sort) + 1;
+                             logmsg = String.Format("\t[SUCCESS] Required \"{0}\" found on line {2} {1}", resendFuncName, Environment.NewLine, resendMatchLineNum);
+                            
 
                         }
                         else
@@ -566,12 +569,7 @@ namespace ScriptAnalyzer.ToolBar
                      //   .Where(x=> x.functionId == )
                     // If so, is there at least one matching resend?
 
-
-                 
-
                 }
-
-
 
             }
 
@@ -583,7 +581,8 @@ namespace ScriptAnalyzer.ToolBar
                 rTxtBox.Text += lineToWriteToBox.firstPortion + lineToWriteToBox.result;
             }
 
-
+            if (noRecordsProcessed = true)
+                rTxtBox.Text += "No problems detected!" + Environment.NewLine;
 
 
 

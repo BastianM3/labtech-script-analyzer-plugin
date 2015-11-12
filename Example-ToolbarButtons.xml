@@ -59,6 +59,57 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
+        <member name="T:Library.Forms.SortableBindingList`1">
+            <summary>
+            Provides a generic collection that supports data binding and additionally supports sorting.
+            See http://msdn.microsoft.com/en-us/library/ms993236.aspx
+            If the elements are IComparable it uses that; otherwise compares the ToString()
+            </summary>
+            <typeparam name="T">The type of elements in the list.</typeparam>
+        </member>
+        <member name="M:Library.Forms.SortableBindingList`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Library.Forms.SortableBindingList`1"/> class.
+            </summary>
+        </member>
+        <member name="M:Library.Forms.SortableBindingList`1.#ctor(System.Collections.Generic.IList{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Library.Forms.SortableBindingList`1"/> class.
+            </summary>
+            <param name="list">An <see cref="T:System.Collections.Generic.IList`1"/> of items to be contained in the <see cref="T:System.ComponentModel.BindingList`1"/>.</param>
+        </member>
+        <member name="M:Library.Forms.SortableBindingList`1.RemoveSortCore">
+            <summary>
+            Removes any sort applied with ApplySortCore if sorting is implemented
+            </summary>
+        </member>
+        <member name="M:Library.Forms.SortableBindingList`1.ApplySortCore(System.ComponentModel.PropertyDescriptor,System.ComponentModel.ListSortDirection)">
+            <summary>
+            Sorts the items if overridden in a derived class
+            </summary>
+            <param name="prop"></param>
+            <param name="direction"></param>
+        </member>
+        <member name="P:Library.Forms.SortableBindingList`1.SupportsSortingCore">
+            <summary>
+            Gets a value indicating whether the list supports sorting.
+            </summary>
+        </member>
+        <member name="P:Library.Forms.SortableBindingList`1.IsSortedCore">
+            <summary>
+            Gets a value indicating whether the list is sorted.
+            </summary>
+        </member>
+        <member name="P:Library.Forms.SortableBindingList`1.SortDirectionCore">
+            <summary>
+            Gets the direction the list is sorted.
+            </summary>
+        </member>
+        <member name="P:Library.Forms.SortableBindingList`1.SortPropertyCore">
+            <summary>
+            Gets the property descriptor that is used for sorting the list if sorting is implemented in a derived class; otherwise, returns null
+            </summary>
+        </member>
         <member name="F:ScriptAnalyzer.ToolBar.viewRawScriptXML.components">
             <summary>
             Required designer variable.
