@@ -529,7 +529,7 @@ namespace ScriptAnalyzer.ToolBar
                     foreach (var lineForThisFunction in listMatchesSeeked.OrderBy(x => int.Parse(x.sort) ))
                     {
                         lineNumOfIf = int.Parse(lineForThisFunction.sort) + 1;
-                        noRecordsProcessed = false;
+                        
                         // get count of rows where line # > current line. 
                         var foundResends = allScriptSteps
                             .Where(x=>x!=null)
@@ -558,6 +558,7 @@ namespace ScriptAnalyzer.ToolBar
                         {
                             // ut-oh ... didn't find a matching resend event!
                            logmsg = String.Format("\t[FAIL] - \"{1}\" required before this step to pull fresh data!{0}", Environment.NewLine, resendFuncName);
+                           noRecordsProcessed = false;
                         }
 
                         outputLineObject.Add(new txtBoxMsgForSorting { lineNum = lineNumOfIf, firstPortion = lineStart, result = logmsg });
@@ -581,10 +582,10 @@ namespace ScriptAnalyzer.ToolBar
                 rTxtBox.Text += lineToWriteToBox.firstPortion + lineToWriteToBox.result;
             }
 
-            if (noRecordsProcessed = true)
+            if (noRecordsProcessed)
+            {
                 rTxtBox.Text += "No problems detected!" + Environment.NewLine;
-
-
+            }
 
         }
 

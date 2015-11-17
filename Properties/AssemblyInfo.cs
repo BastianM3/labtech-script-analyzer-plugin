@@ -18,7 +18,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("A LabTech plugin that analyzes your scripts for common syntax errors and problems.")]
 [assembly: AssemblyCompany("Marcus Bastian")]
 [assembly: AssemblyProduct("LabTech Script Analyzer")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 
 [assembly: ComVisible(false)]
@@ -37,8 +37,8 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // <Assembly: AssemblyVersion("1.0.*")> 
 
-[assembly: AssemblyVersion("1.0.0.2")]
-[assembly: AssemblyFileVersion("1.0.0.2")]
+[assembly: AssemblyVersion("1.3.0.0")]
+[assembly: AssemblyFileVersion("1.3.0.0")]
 
 
 [assembly: AssemblyConfiguration("")]

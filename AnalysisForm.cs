@@ -60,7 +60,7 @@ namespace ScriptAnalyzer.ToolBar
 I hope that this plugin makes LabTech scripting easier for you, and will reduce the time required to develop/test your LabTech scripts. \line\line
 
 Too many times have I seen my scripts and those of others fail due to typos in script note labels or labels that were pasted and needed to be renamed. 
-\line
+\line\line
 Happy LabTech Scripting!\line\line
 
 - Marcus \line
@@ -92,7 +92,7 @@ Happy LabTech Scripting!\line\line
 
             var SqlQuery =
                 string.Format(
-                    "SELECT ScriptID, TRIM( TRAILING '\\\\' FROM CONVERT(CONCAT(IFNULL(CONCAT(f.Name ,' \\\\ '),''),IFNULL(CONCAT(s.Name ,'\\\\\\\\'),''),'' ) USING utf8)) AS `Script Folder`,c.ScriptName AS `Script Name`, ScriptData AS `ScriptData`, last_User,last_date FROM LT_scripts c LEFT JOIN scriptfolders s 	ON s.folderid=c.folderid LEFT JOIN scriptfolders f ON f.folderid=s.parentid WHERE (COALESCE(s.parentid,0)=0 OR s.name NOT LIKE '\\\\_%') AND c.ScriptID={0} ORDER BY `Script Folder` ASC;",
+                    "SELECT ScriptID, TRIM( TRAILING '\\\\' FROM CONVERT(CONCAT(IFNULL(CONCAT(f.Name ,' \\\\ '),''),IFNULL(CONCAT(s.Name ,'\\\\\\\\'),''),'' ) USING utf8)) AS `Script Folder`,c.ScriptName AS `Script Name`, ScriptData AS `ScriptData`, last_User,last_date FROM LT_scripts c LEFT JOIN scriptfolders s 	ON s.folderid=c.folderid LEFT JOIN scriptfolders f ON f.folderid=s.parentid WHERE (COALESCE(s.parentid,0)=0 OR s.name NOT LIKE '\\\\_%') AND c.ScriptID={0} ORDER BY `ScriptID` asc;",
                     _currentScriptRecord.scriptId);
             var ds = _Host.GetDataSet(SqlQuery);
 

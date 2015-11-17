@@ -108,10 +108,11 @@ namespace ScriptAnalyzer.ToolBar
                     lastDate = curLastUpdated
                 });
             }
+
             
             dataGridView1.DataSource = rows;
             AdjustDataColumns();
-
+            dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Descending);
 
         }
 
@@ -189,7 +190,7 @@ namespace ScriptAnalyzer.ToolBar
             MenuItem mnuAnalyzeItem = new MenuItem("Analyze (QA)");
             mnuAnalyzeItem.Click += mnuAnalyzeItem_Click;
 
-            MenuItem mnuViewItem = new MenuItem("View (coming soon)");
+            MenuItem mnuViewItem = new MenuItem("View History (coming soon)");
                mnuViewItem.Click += mnuViewItem_Click;
 
             menu.MenuItems.AddRange(
