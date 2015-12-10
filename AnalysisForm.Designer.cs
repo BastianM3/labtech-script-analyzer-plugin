@@ -55,6 +55,10 @@
             this.btnBuildReport = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.TabRawXML = new System.Windows.Forms.TabPage();
+            this.TabSuggested = new System.Windows.Forms.TabPage();
+            this.richTextBoxSuggestions = new System.Windows.Forms.RichTextBox();
+            this.richTextBoxRawXML = new System.Windows.Forms.RichTextBox();
             this.tc_ScriptResults.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -78,6 +82,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tc_ScriptResults.Controls.Add(this.tabPage1);
             this.tc_ScriptResults.Controls.Add(this.tabPage2);
+            this.tc_ScriptResults.Controls.Add(this.TabRawXML);
+            this.tc_ScriptResults.Controls.Add(this.TabSuggested);
             this.tc_ScriptResults.Location = new System.Drawing.Point(0, 3);
             this.tc_ScriptResults.Name = "tc_ScriptResults";
             this.tc_ScriptResults.SelectedIndex = 0;
@@ -114,6 +120,7 @@
             this.button2.TabIndex = 16;
             this.button2.Text = "View Suggested Practices";
             this.button2.UseVisualStyleBackColor = false;
+            this.button2.Visible = false;
             this.button2.Click += new System.EventHandler(this.button2_Click_1);
             // 
             // checkBox1
@@ -141,6 +148,7 @@
             this.button1.TabIndex = 14;
             this.button1.Text = "View Raw Script XML";
             this.button1.UseVisualStyleBackColor = false;
+            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // tableLayoutPanel2
@@ -407,22 +415,68 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.BackColor = System.Drawing.Color.Black;
+            this.richTextBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(27)))));
             this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.richTextBox1.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.richTextBox1.Location = new System.Drawing.Point(9, 9);
-            this.richTextBox1.Margin = new System.Windows.Forms.Padding(6, 13, 6, 6);
+            this.richTextBox1.Location = new System.Drawing.Point(1, 1);
+            this.richTextBox1.Margin = new System.Windows.Forms.Padding(20, 13, 6, 6);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(765, 178);
+            this.richTextBox1.Size = new System.Drawing.Size(785, 198);
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = "";
+            // 
+            // TabRawXML
+            // 
+            this.TabRawXML.Location = new System.Drawing.Point(4, 22);
+            this.TabRawXML.Name = "TabRawXML";
+            this.TabRawXML.Size = new System.Drawing.Size(785, 196);
+            this.TabRawXML.TabIndex = 2;
+            this.TabRawXML.Text = "Raw Script XML";
+            this.TabRawXML.UseVisualStyleBackColor = true;
+            // 
+            // TabSuggested
+            // 
+            this.TabSuggested.Location = new System.Drawing.Point(4, 22);
+            this.TabSuggested.Name = "TabSuggested";
+            this.TabSuggested.Size = new System.Drawing.Size(785, 196);
+            this.TabSuggested.TabIndex = 3;
+            this.TabSuggested.Text = "View Suggested Practices";
+            this.TabSuggested.UseVisualStyleBackColor = true;
+            // 
+            // richTextBoxSuggestions
+            // 
+            this.richTextBoxSuggestions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(27)))));
+            this.richTextBoxSuggestions.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.richTextBoxSuggestions.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.richTextBoxSuggestions.Location = new System.Drawing.Point(4, 25);
+            this.richTextBoxSuggestions.Name = "richTextBoxSuggestions";
+            this.richTextBoxSuggestions.ReadOnly = true;
+            this.richTextBoxSuggestions.Size = new System.Drawing.Size(789, 686);
+            this.richTextBoxSuggestions.TabIndex = 13;
+            this.richTextBoxSuggestions.Text = "";
+            this.richTextBoxSuggestions.Visible = false;
+            // 
+            // richTextBoxRawXML
+            // 
+            this.richTextBoxRawXML.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(33)))), ((int)(((byte)(27)))));
+            this.richTextBoxRawXML.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.richTextBoxRawXML.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.richTextBoxRawXML.Location = new System.Drawing.Point(4, 26);
+            this.richTextBoxRawXML.Name = "richTextBoxRawXML";
+            this.richTextBoxRawXML.ReadOnly = true;
+            this.richTextBoxRawXML.Size = new System.Drawing.Size(789, 685);
+            this.richTextBoxRawXML.TabIndex = 14;
+            this.richTextBoxRawXML.Text = "";
+            this.richTextBoxRawXML.Visible = false;
             // 
             // AnalysisForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(793, 711);
+            this.Controls.Add(this.richTextBoxRawXML);
+            this.Controls.Add(this.richTextBoxSuggestions);
             this.Controls.Add(this.tc_ScriptResults);
             this.Controls.Add(this.rTxtBoxResults);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -468,6 +522,10 @@
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.TabPage TabRawXML;
+        private System.Windows.Forms.TabPage TabSuggested;
+        private System.Windows.Forms.RichTextBox richTextBoxSuggestions;
+        private System.Windows.Forms.RichTextBox richTextBoxRawXML;
 
     }
 }

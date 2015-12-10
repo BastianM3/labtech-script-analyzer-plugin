@@ -15,7 +15,7 @@ namespace ScriptAnalyzer.ToolBar
 		{
 			get
 			{
-				return "LabTech Script Analyzer";
+				return "Performs a static analysis of your LabTech scripts in order to identify problems before a script is ran against production agents.";
 			}
 		}
 

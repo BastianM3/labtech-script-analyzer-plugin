@@ -17,7 +17,7 @@ namespace ScriptAnalyzer.ToolBar
             PopulateSuggestionsBox(richTextBoxSuggestions);
         }
 
-        public void PopulateSuggestionsBox(RichTextBox rtb)
+        public static void PopulateSuggestionsBox(RichTextBox rtb)
         {
 
             rtb.Rtf = @"{\rtf1\ansi 

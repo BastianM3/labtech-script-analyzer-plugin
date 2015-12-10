@@ -47,7 +47,12 @@ namespace ScriptAnalyzer.ToolBar
         {
 
             InitializeComponent();
+            tc_ScriptResults.SelectedIndexChanged += new EventHandler(Tabs_SelectedIndexChanged);
+            
             _Host = host;
+
+            richTextBoxSuggestions.ResetText();
+            viewSuggestions.PopulateSuggestionsBox(richTextBoxSuggestions);
 
             txtBoxMissingCof.Text = "0";
             _numberOfMissingLabels = 0;
@@ -57,6 +62,7 @@ namespace ScriptAnalyzer.ToolBar
             PerformQaOperations();
 
             richTextBox1.Rtf = @"{\rtf1\ansi \b
+\line
 I hope that this plugin makes LabTech scripting easier for you, and will reduce the time required to develop/test your LabTech scripts. \line\line
 
 Too many times have I seen my scripts and those of others fail due to typos in script note labels or labels that were pasted and needed to be renamed. 
@@ -1657,8 +1663,15 @@ Happy LabTech Scripting!\line\line
 
         private void button1_Click(object sender, EventArgs e)
         {
+            
+            // Need to change contents of text block to new text
             var frmRawScript = new viewRawScriptXML(_CurrentScriptXml);
             frmRawScript.Show();
+
+
+
+
+
         }
 
         public void UpdateCOFTextBox(string txt)
@@ -1779,6 +1792,32 @@ Happy LabTech Scripting!\line\line
             viewSuggestions vwSuggestions = new viewSuggestions();
             vwSuggestions.Show();
         }
+
+        private void Tabs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            switch ((sender as TabControl).SelectedIndex)
+            {
+                case 2:
+                    // show script XML
+                    richTextBoxRawXML.Text = _CurrentScriptXml;
+                    richTextBoxRawXML.Visible = true;
+                    break;
+                case 3:
+                    // show the suggestions
+                    richTextBoxSuggestions.Visible = true;
+                    richTextBoxRawXML.Visible = false;
+                    break;
+                default:
+                    richTextBoxSuggestions.Visible = false;
+                    richTextBoxRawXML.Visible = false;
+                    break;
+            }
+            
+
+        }
+
+
        }
 }
 
