@@ -38,6 +38,23 @@
             the contents of this method with the code editor.
             </summary>
         </member>
+        <member name="F:ScriptAnalyzer.ToolBar.historyManager.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:ScriptAnalyzer.ToolBar.historyManager.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:ScriptAnalyzer.ToolBar.historyManager.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
         <member name="T:ScriptAnalyzer.ToolBar.Properties.Resources">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.

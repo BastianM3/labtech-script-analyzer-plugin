@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Net.Mime;
 using System.Text;
@@ -52,15 +53,7 @@ namespace ScriptAnalyzer.ToolBar
                     lineNumber = lineNumber + 1;
                 } 
 
-
                 var currentP1 = entry.param1;
-                var currentP2 = entry.param2;
-                var currentP3 = entry.param3;
-                var currentP4 = entry.param4;
-                var currentP5 = entry.param5;
-
-                var currentFid = Int32.Parse(entry.functionId);
-                var isNumber = Int32.TryParse(entry.param1, out stepsToSkip);
 
                 //////////////////////////////////////
                 // logic for script notes           //
@@ -109,7 +102,7 @@ namespace ScriptAnalyzer.ToolBar
                 return;
             }
 
-
+            
             // FOR EACH IF FUNCTION ...
             foreach (var item in AnalysisForm._GotoFunctionList.ToList())
             {
@@ -462,6 +455,7 @@ namespace ScriptAnalyzer.ToolBar
             public string result { get; set; }
             public string firstPortion { get; set; }
         }
+
         public static void FindMissingResends(List<AnalysisForm.ScriptStepRec> allScriptSteps, RichTextBox rTxtBox)
         {
             bool noRecordsProcessed = true;
@@ -587,6 +581,132 @@ namespace ScriptAnalyzer.ToolBar
                 rTxtBox.Text += "No problems detected!" + Environment.NewLine;
             }
 
+        }
+
+        public static int identifyDuplicateLabels(List<AnalysisForm.ScriptStepRec> allScriptNotes, RichTextBox rtb)
+        {
+            int countDuplicates = 0;
+
+            if (allScriptNotes == null)
+            {
+                return countDuplicates;
+            }
+
+            // TODO: Group by param1?
+            // Using a dictionary to add the count and name of a label to.
+            // If I see the label in there already, I will increase the count.
+            Dictionary<string, int> aggregateDictionary = new Dictionary<string, int>();
+            
+            //var groupedList = allScriptNotes.ToList().Select(e => e.param1).GroupBy()
+            var scriptNotesToProcess = allScriptNotes.ToList().Select(e => e.param1);
+            string results = "";
+            int numberOfDuplicates = 0;
+
+            foreach (string scriptNoteStep in scriptNotesToProcess)
+            {
+                
+                // does dictionary already have this entry? 
+                if(aggregateDictionary.ContainsKey(scriptNoteStep))
+                {
+
+                    // YES - so increase the count
+                    int count = 1 ; 
+                    aggregateDictionary.TryGetValue(scriptNoteStep, out count);
+
+                    int newCount = count + 1;
+                    aggregateDictionary[scriptNoteStep] = newCount;
+
+                    string commaDelim = "";
+
+                    // Get the line numbers we found these labels on from the initial list<scriptsteps>.
+                    // var labelDetails = allScriptNotes.Where(x => x.param1 == scriptNoteStep).ToList();
+                    
+
+                }
+                else
+                {
+                    // NO - so add it. This means there is only one so far. 
+                    aggregateDictionary.Add(scriptNoteStep, 1);
+                }
+
+               
+              
+               
+                
+            }
+
+
+            // for each aggregated row    <LABEL> <Count>
+            /*
+             string logmsg = "";
+                   
+                   foreach (var sortOfDupe in labelDetails.Select(x => int.Parse(x.sort) + 1)).ToList())
+                   {
+                        logmsg += String.Format("[Line {1}] \tDuplicate script note label \"{0}\" detected:", scriptNoteStep, sortOfDupe).PadRight(70, '.');
+                        logmsg += String.Format("\t[FAIL] - Duplicate detected {0}", Environment.NewLine);
+                   }
+                    
+                    /* var logmsg = String.Format("[Line {1}] \tDuplicate script note label \"{0}\" detected:", scriptNoteStep, commaDelim).PadRight(70, '.');
+                    logmsg +=
+                        String.Format("\t[FAIL] - Duplicates detected {0}", Environment.NewLine);
+                    */
+
+            string logmsg = "";
+
+            foreach (var labelWithDuplicates in aggregateDictionary.Where(x => x.Value > 1))
+            {
+                // for this duplicate, get all lines that match
+                var duplicates = allScriptNotes.Where(x => x.param1 == labelWithDuplicates.Key).ToList();
+
+                if (duplicates.Any())
+                {
+                    countDuplicates += labelWithDuplicates.Value - 1;
+                    
+                    bool isFirstEnabled = true;
+
+                    foreach (var duplicateRecord in duplicates.OrderBy(x => x.osLimit).ThenBy(x=> x.sort))
+                    {
+                        var sort = duplicateRecord.sort;
+                        if (isFirstEnabled && duplicateRecord.osLimit != "-2147483648")
+                        {
+                            // logmsg += String.Format("[Line {1}] \tDuplicate script note labels \"{0}\" detected:", duplicateRecord.param1, int.Parse(sort) + 1).PadRight(70, '.');
+                            // logmsg += String.Format("\t[WARNING] - Duplicates detected {0}", Environment.NewLine);
+                            // flip flag to false so that it wont do this logic again for first record
+                            // I want to label the first enabled line as the original.
+                            isFirstEnabled = false;
+                        }
+                        else
+                        {
+                            logmsg += String.Format("[Line {1}] \tDuplicate script note label \"{0}\" detected:", duplicateRecord.param1, int.Parse(sort) + 1).PadRight(70, '.');
+                            logmsg += String.Format("\t[FAIL] - Duplicate detected {0}", Environment.NewLine);
+                        }
+                        
+                    }
+
+                }
+
+            }
+
+            if (!string.IsNullOrEmpty(logmsg))
+            {
+
+                // there are warnings of duplicates, so let's slap the header in front of it before alerting on it.
+                var header = String.Format("{0}----------------------------------------------------------------------------------------------------------------------------------------------------{0}", Environment.NewLine);
+                header += String.Format("Identifying any duplicate script note labels ....\t Number of duplicates found: {0} ", numberOfDuplicates);
+                header += String.Format("{0}----------------------------------------------------------------------------------------------------------------------------------------------------{0}{0}", Environment.NewLine);
+
+                logmsg = header + logmsg;
+
+                rtb.Text += logmsg;
+
+            }
+            
+
+              
+
+
+
+            return countDuplicates;
         }
 
 

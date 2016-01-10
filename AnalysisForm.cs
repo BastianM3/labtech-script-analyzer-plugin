@@ -265,9 +265,17 @@ Happy LabTech Scripting!\line\line
             // CALL function that analyzes the IF functions. This looks for missing labelsEXIT
             AnalysisFunctions.AnalyzeIfFunctions(scriptdata, rTxtBoxResults, listOfLabelsFound);
 
+            // TODO: Call function that looks for duplicate script notes
+            // It appears that even in 10.5, disabled labels are still considered by jump functions.
+            var listEnabledAndDisabledNotes = scriptdata.Where(e => int.Parse(e.functionId) == 139).ToList();
+            var numberOfDuplicates = AnalysisFunctions.identifyDuplicateLabels(listEnabledAndDisabledNotes,
+                rTxtBoxResults);
+
             // To DO:  CALL function that looks for unused labels.
             var numberOfUnused = AnalysisFunctions.IdentifyUnusedLabels(listOfLabelsFound, rTxtBoxResults);
             textBox3.Text = numberOfUnused.ToString();
+
+            
 
             // To DO: CALL function that identifies commands w/o continue on failure
 
@@ -283,6 +291,8 @@ Happy LabTech Scripting!\line\line
                 throw;
             }
 
+            // This section identifies any "IF CACHED DATA" script steps that have
+            // a preceding and matching "resend xxxxxx" script step.
             try
             {
                 AnalysisFunctions.FindMissingResends(scriptdata, rTxtBoxResults);
@@ -296,6 +306,8 @@ Happy LabTech Scripting!\line\line
                 rTxtBoxResults.Text += ex.StackTrace + Environment.NewLine;
 
             }
+
+            // Identify duplicate 
 
         }
 

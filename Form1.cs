@@ -190,7 +190,7 @@ namespace ScriptAnalyzer.ToolBar
             MenuItem mnuAnalyzeItem = new MenuItem("Analyze (QA)");
             mnuAnalyzeItem.Click += mnuAnalyzeItem_Click;
 
-            MenuItem mnuViewItem = new MenuItem("View History (coming soon)");
+            MenuItem mnuViewItem = new MenuItem("View Update History");
                mnuViewItem.Click += mnuViewItem_Click;
 
             menu.MenuItems.AddRange(
@@ -202,12 +202,17 @@ namespace ScriptAnalyzer.ToolBar
 
 void mnuViewItem_Click(object sender, EventArgs e)
 {
- 	//throw new NotImplementedException();
+    DataGridViewRow row = dataGridView1.Rows[dataGridView1.SelectedCells[0].RowIndex];
+    int selectedScriptId = (int)row.Cells["ScriptID"].Value;
+
+    IEnumerable<scriptRow> currentRow = _scriptList.Where(o => o.scriptId == selectedScriptId);
+    historyManager histForm = new historyManager(currentRow, _Host);
+    histForm.Show();
+    
 }
 
 void mnuAnalyzeItem_Click(object sender, EventArgs e)
 {
- 	
     DataGridViewRow row = dataGridView1.Rows[dataGridView1.SelectedCells[0].RowIndex];
     int selectedScriptId = (int) row.Cells["ScriptID"].Value;
 
@@ -218,6 +223,7 @@ void mnuAnalyzeItem_Click(object sender, EventArgs e)
     outputForm.Show();
 
 }
+
         private void dataGridView1_MouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
 
